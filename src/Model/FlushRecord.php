@@ -58,15 +58,17 @@ class FlushRecord extends DataObject implements flushable
         $this->Code = $code;
     }
 
-    public function requireDefaultRecords()
+    public static function flush()
     {
         if(Director::isCli()) {
             parent::requireDefaultRecords();
             $obj = self::create();
             $obj->write();
             $code = $obj->code;
-            $url = Director::AbsoluteLink('/admin/flush-front-end/'.$code.'/');
-            DB::alteration_message('creating flush link: '.$url);
+            $url = Director::AbsoluteLink(
+                Controller::join_link(FlushReceiver::my_url_segment(),  $code)
+            );
+            DB::alteration_message('Creating flush link: '.$url);
             register_shutdown_function(function () {
                 Sunnysideup\FlushFrontEnd\Model\FlushRecord::run_flush($url);
             });

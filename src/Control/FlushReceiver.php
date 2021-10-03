@@ -19,13 +19,22 @@ class FlushReceiver extends Controller
         'do' => true,
     ];
 
+    public static function my_url_segment() : string
+    {
+        return '/admin/flush-front-end/';
+    }
+    public function Link($action = '')
+    {
+        return self::join_links(self::my_url_segment(), $action);
+    }
+
     public function do($request)
     {
         $code = $request->param('ID');
-        if($this->isSafe($code)) {
-            Injector::inst()->get(Kernel::class)->boot(true);
-            $this->get('/');
+        if($this->isValid($code)) {
+
             $this->doFlush();
+
             //run flush!
             $obj->Done = true;
             $obj->write();
@@ -45,7 +54,7 @@ class FlushReceiver extends Controller
         }
     }
 
-    protected function isSafe(string $code) : bool
+    protected function isValid(string $code) : bool
     {
         $obj = DataObject::get_one(FlushRecord::class);
         if($obj) {
