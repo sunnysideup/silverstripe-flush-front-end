@@ -1,0 +1,9 @@
+
+---
+Name: 'flush-front-end'
+Before:
+  - '#adminroutes'
+---
+SilverStripe\Control\Director:
+  rules:
+    'admin/flush-front-end//$Action/$ID/$OtherID/$Version': 'Sunnysideup\FlushFrontEnd\Control\FlushReceiver'
