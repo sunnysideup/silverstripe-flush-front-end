@@ -9,8 +9,10 @@ use Sunnysideup\FlushFrontEnd\Control\FlushReceiver;
 use SilverStripe\Control\Controller;
 
 use SilverStripe\Control\Director;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\Core\Flushable;
 
-class FlushRecord extends DataObject implements flushable
+class FlushRecord extends DataObject implements Flushable
 {
 
     private static $db = [
