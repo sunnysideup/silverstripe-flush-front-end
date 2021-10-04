@@ -39,13 +39,17 @@ class FlushReceiver extends Controller
     public function do($request)
     {
         $code = $request->param('ID');
-        if($this->isValid($code)) {
+        $obj = $this->getFlushRecord($code);
+        if($obj) {
 
             $this->doFlush();
 
             //run flush!
             $obj->Done = true;
             $obj->write();
+            echo 'FRONT-END FLUSHED';
+        } else {
+            echo 'ERROR';
         }
     }
 
@@ -63,18 +67,16 @@ class FlushReceiver extends Controller
         }
     }
 
-    protected function isValid(string $code) : bool
+    protected function getFlushRecord(string $code) : ?FlushRecord
     {
-        $obj = DataObject::get_one(FlushRecord::class);
+        $obj = FlushRecord::get()->filter(['Done' => false, 'Code' => $code])->first();
         if($obj) {
-            if($obj->Code === $code) {
-                if((bool) $obj->Done === false) {
-                    return true;
-                }
-            }
+            return $obj;
+        } else {
+            echo 'object not found';
         }
 
-        return false;
+        return null;
     }
 
 }

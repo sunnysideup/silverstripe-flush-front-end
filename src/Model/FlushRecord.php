@@ -18,17 +18,19 @@ class FlushRecord extends DataObject implements Flushable
     private static $table_name = 'FlushRecord';
 
     private static $db = [
-        'FlushCode' => 'Varchar',
+        'Code' => 'Varchar',
         'Done' => 'Boolean',
     ];
 
     private static $summary_fields = [
         'Created.Nice' => 'When',
-        'FlushCodee' => 'Code',
+        'Code' => 'Code',
     ];
 
     private static $indexes = [
         'Created' => true,
+        'Done' => true,
+        'Code' => true,
     ];
 
     private static $default_sort = [
@@ -46,7 +48,7 @@ class FlushRecord extends DataObject implements Flushable
                     'When'
                 ),
                 ReadonlyField::create(
-                    'FlushCode',
+                    'Code',
                     'Code'
                 ),
                 CheckboxField::create(
@@ -78,7 +80,7 @@ class FlushRecord extends DataObject implements Flushable
                 $obj->write();
                 $code = $obj->Code;
                 $url = Director::absoluteURL(
-                    Controller::join_links(FlushReceiver::my_url_segment(),  $code)
+                    Controller::join_links(FlushReceiver::my_url_segment(), 'do', $code)
                 );
                 DB::alteration_message('Creating flush link: '.$url);
                 \Sunnysideup\FlushFrontEnd\Model\FlushRecord::run_flush($url);
