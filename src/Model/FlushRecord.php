@@ -25,6 +25,7 @@ class FlushRecord extends DataObject implements Flushable
     private static $summary_fields = [
         'Created.Nice' => 'When',
         'Code' => 'Code',
+        'Done.Nice' => 'Done',
     ];
 
     private static $indexes = [
