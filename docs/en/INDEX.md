@@ -3,9 +3,10 @@ https://github.com/silverstripe/silverstripe-framework/issues/3092
 
 ## How this works:
 
- 1. when you run a `dev/build` on the command line, it creates a record in the database.
- 2. it also opens a special link on the front-end to flush from the front-end. This special link can verify it comes from the back-end using a hash.
- 3. this front-end request then runs a flush of sorts.
+ 1. when you run a `sake dev/build flush=all` on the command line, it creates a record in the database.
+ 2. at the end of the run, it opens a link on the front-end to flush from the front-end. 
+ 3. the front-end can run this savely, because it contains a secret hash
+ 4. this front-end request then runs a flush of sorts.
 
 ## how to use it
 
