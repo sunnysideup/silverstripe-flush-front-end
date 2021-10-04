@@ -17,7 +17,7 @@ use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Core\Resettable;
 use SilverStripe\Core\Flushable;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\Core\Flushable;
+
 
 class FlushReceiver extends Controller
 {
