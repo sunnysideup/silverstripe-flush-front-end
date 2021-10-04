@@ -43,6 +43,7 @@ class FlushReceiver extends Controller
 
     protected function doFlush()
     {
+        ClassLoader::inst()->getManifest()->regenerate(false);
         // Reset all resettables
         /** @var Resettable $resettable */
         foreach (ClassInfo::implementorsOf(Resettable::class) as $resettable) {
