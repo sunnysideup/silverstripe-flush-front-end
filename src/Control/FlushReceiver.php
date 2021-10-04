@@ -57,6 +57,9 @@ class FlushReceiver extends Controller
 
     protected function doFlush()
     {
+        if(Director::is_cli()) {
+            die('This needs to be run from the front-end.');
+        }
         HTTPCacheControlMiddleware::singleton()->disableCache(true);
         ClassLoader::inst()->getManifest()->regenerate(false);
         // Reset all resettables
