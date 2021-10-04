@@ -6,6 +6,8 @@ namespace Sunnysideup\FlushFrontEnd\Control;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Util\IPUtils;
+
+use SilverStripe\Control\Middleware\HTTPCacheControlMiddleware;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Environment;
 use SilverStripe\Core\Injector\Injector;
@@ -55,6 +57,7 @@ class FlushReceiver extends Controller
 
     protected function doFlush()
     {
+        HTTPCacheControlMiddleware::singleton()->disableCache(true);
         ClassLoader::inst()->getManifest()->regenerate(false);
         // Reset all resettables
         /** @var Resettable $resettable */

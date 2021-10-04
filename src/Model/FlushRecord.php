@@ -19,6 +19,7 @@ class FlushRecord extends DataObject implements Flushable
 
     private static $db = [
         'Code' => 'Varchar',
+        'Response' => 'Varchar',
         'Done' => 'Boolean',
     ];
 
@@ -52,6 +53,10 @@ class FlushRecord extends DataObject implements Flushable
                     'Code',
                     'Code'
                 ),
+                ReadonlyField::create(
+                    'Response',
+                    'Response'
+                ),
                 CheckboxField::create(
                     'Done',
                     'Done'
@@ -79,34 +84,37 @@ class FlushRecord extends DataObject implements Flushable
             register_shutdown_function(function () {
                 $obj = \Sunnysideup\FlushFrontEnd\Model\FlushRecord::create();
                 $obj->write();
+                sleep(2);
                 $code = $obj->Code;
                 $url = Director::absoluteURL(
                     Controller::join_links(FlushReceiver::my_url_segment(), 'do', $code)
                 );
                 DB::alteration_message('Creating flush link: '.$url);
-                \Sunnysideup\FlushFrontEnd\Model\FlushRecord::run_flush($url);
+                // Create a new cURL resource
+                $ch = curl_init();
+
+                // Set the file URL to fetch through cURL
+                curl_setopt($ch, CURLOPT_URL, $url);
+
+                // Do not check the SSL certificates
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
+                // Return the actual result of the curl result instead of success code
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_HEADER, 0);
+                $data = curl_exec($ch);
+                curl_close($ch);
+
+                $obj->Response = $data;
+                $obj->write();
+                echo $data;
             });
         }
     }
 
     public static function run_flush($url)
     {
-        // Create a new cURL resource
-        $ch = curl_init();
 
-        // Set the file URL to fetch through cURL
-        curl_setopt($ch, CURLOPT_URL, $url);
-
-        // Do not check the SSL certificates
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-
-        // Return the actual result of the curl result instead of success code
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-        $data = curl_exec($ch);
-        curl_close($ch);
-
-        return $data;
     }
 
 }
