@@ -18,6 +18,8 @@ use SilverStripe\Core\Resettable;
 use SilverStripe\Core\Flushable;
 use SilverStripe\ORM\DataObject;
 
+use Sunnysideup\FlushFrontEnd\Model\FlushRecord;
+
 
 class FlushReceiver extends Controller
 {
