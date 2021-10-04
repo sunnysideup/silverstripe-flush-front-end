@@ -12,6 +12,10 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Security\IdentityStore;
 use SilverStripe\Security\MemberAuthenticator\CookieAuthenticationHandler;
 use SilverStripe\Security\Security;
+use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Manifest\ClassLoader;
+use SilverStripe\Core\Resettable;
+use SilverStripe\Core\Flushable;
 
 class FlushReceiver extends Controller
 {

@@ -2,9 +2,13 @@
 
 namespace Sunnysideup\FlushFrontEnd\Model;
 
+use SilverStripe\ORM\DB;
+use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\ReadonlyField;
+use Sunnysideup\FlushFrontEnd\Control\FlushReceiver;
+use SilverStripe\Control\Controller;
 
-
+use SilverStripe\Control\Director;
 
 class FlushRecord extends DataObject implements flushable
 {
@@ -65,7 +69,7 @@ class FlushRecord extends DataObject implements flushable
             $obj = self::create();
             $obj->write();
             $code = $obj->code;
-            $url = Director::AbsoluteLink(
+            $url = Director::absoluteURL(
                 Controller::join_link(FlushReceiver::my_url_segment(),  $code)
             );
             DB::alteration_message('Creating flush link: '.$url);
