@@ -51,7 +51,7 @@ class FlushReceiver extends Controller
             $obj->write();
             echo 'FRONT-END FLUSHED';
         } else {
-            echo 'ERROR';
+            echo '<br />ERROR';
         }
     }
 
