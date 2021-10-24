@@ -2,18 +2,18 @@
 
 namespace Sunnysideup\FlushFrontEnd\Model;
 
-use SilverStripe\ORM\DB;
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\Director;
+use SilverStripe\Core\Flushable;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\ReadonlyField;
-use Sunnysideup\FlushFrontEnd\Control\FlushReceiver;
-use SilverStripe\Control\Controller;
-
-use SilverStripe\Control\Director;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\Core\Flushable;
+use SilverStripe\ORM\DB;
+use Sunnysideup\FlushFrontEnd\Control\FlushReceiver;
 
 class FlushRecord extends DataObject implements Flushable
 {
+    protected static $done = false;
 
     private static $table_name = 'FlushRecord';
 
@@ -60,9 +60,10 @@ class FlushRecord extends DataObject implements Flushable
                 CheckboxField::create(
                     'Done',
                     'Done'
-                )
+                ),
             ]
         );
+
         return $fields;
     }
 
@@ -71,15 +72,13 @@ class FlushRecord extends DataObject implements Flushable
         parent::onBeforeWrite();
         $hex = bin2hex(random_bytes(18));
         $code = serialize($hex);
-        $code = preg_replace("/[^a-zA-Z0-9]+/", "", $code);
+        $code = preg_replace('/[^a-zA-Z0-9]+/', '', $code);
         $this->Code = $code;
     }
 
-    protected static $done = false;
-
     public static function flush()
     {
-        if(Director::is_cli() && self::$done === false)  {
+        if (Director::is_cli() && false === self::$done) {
             self::$done = true;
             register_shutdown_function(function () {
                 $obj = \Sunnysideup\FlushFrontEnd\Model\FlushRecord::create();
@@ -89,7 +88,7 @@ class FlushRecord extends DataObject implements Flushable
                 $url = Director::absoluteURL(
                     Controller::join_links(FlushReceiver::my_url_segment(), 'do', $code)
                 );
-                DB::alteration_message('Creating flush link: '.$url);
+                DB::alteration_message('Creating flush link: ' . $url);
                 // Create a new cURL resource
                 $ch = curl_init();
 
@@ -114,7 +113,5 @@ class FlushRecord extends DataObject implements Flushable
 
     public static function run_flush($url)
     {
-
     }
-
 }
