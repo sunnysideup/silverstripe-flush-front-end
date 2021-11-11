@@ -36,7 +36,7 @@ class FlushRecord extends DataObject implements Flushable
     ];
 
     private static $default_sort = [
-        'Created' => 'DESC',
+        'ID' => 'DESC',
     ];
 
     public function getCMSFields()
