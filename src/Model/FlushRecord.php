@@ -9,6 +9,8 @@ use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
+
+use SilverStripe\Security\Security;
 use Sunnysideup\FlushFrontEnd\Control\FlushReceiver;
 
 class FlushRecord extends DataObject implements Flushable
@@ -78,7 +80,7 @@ class FlushRecord extends DataObject implements Flushable
 
     public static function flush()
     {
-        if (Director::is_cli() && false === self::$done) {
+        if (Security::database_is_ready() && Director::is_cli() && false === self::$done) {
             self::$done = true;
             register_shutdown_function(function () {
                 $obj = \Sunnysideup\FlushFrontEnd\Model\FlushRecord::create();
