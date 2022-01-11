@@ -9,7 +9,6 @@ use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
-
 use SilverStripe\Security\Security;
 use Sunnysideup\FlushFrontEnd\Control\FlushReceiver;
 
