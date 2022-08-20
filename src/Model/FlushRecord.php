@@ -68,15 +68,6 @@ class FlushRecord extends DataObject implements Flushable
         return $fields;
     }
 
-    public function onBeforeWrite()
-    {
-        parent::onBeforeWrite();
-        $hex = bin2hex(random_bytes(18));
-        $code = serialize($hex);
-        $code = preg_replace('/[^a-zA-Z0-9]+/', '', $code);
-        $this->Code = $code;
-    }
-
     public static function flush()
     {
         if (Security::database_is_ready() && Director::is_cli() && false === self::$done) {
@@ -114,5 +105,15 @@ class FlushRecord extends DataObject implements Flushable
 
     public static function run_flush($url)
     {
+    }
+
+    protected function onBeforeWrite()
+    {
+        parent::onBeforeWrite();
+        $hex = bin2hex(random_bytes(18));
+        $code = serialize($hex);
+        $code = preg_replace('#[^a-zA-Z0-9]+#', '', $code);
+
+        $this->Code = $code;
     }
 }

@@ -48,6 +48,7 @@ class FlushReceiver extends Controller
         if (Director::is_cli()) {
             die('This needs to be run from the front-end.');
         }
+
         HTTPCacheControlMiddleware::singleton()->disableCache(true);
         ClassLoader::inst()->getManifest()->regenerate(false);
         // Reset all resettables
@@ -55,6 +56,7 @@ class FlushReceiver extends Controller
         foreach (ClassInfo::implementorsOf(Resettable::class) as $resettable) {
             $resettable::reset();
         }
+
         /** @var Flushable $class */
         foreach (ClassInfo::implementorsOf(Flushable::class) as $class) {
             $class::flush();
@@ -63,10 +65,12 @@ class FlushReceiver extends Controller
 
     protected function getFlushRecord(string $code): ?FlushRecord
     {
+        /** @var FlushRecord $obj */
         $obj = FlushRecord::get()->filter(['Done' => false, 'Code' => $code])->first();
         if ($obj) {
             return $obj;
         }
+
         echo 'object not found';
 
         return null;
