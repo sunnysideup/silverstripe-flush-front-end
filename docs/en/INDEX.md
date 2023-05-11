@@ -1,3 +1,7 @@
+## easy way
+
+`SS_FLUSH_ON_DEPLOY` and set this to a file that changes on deploy
+
 ## what it solves
 https://github.com/silverstripe/silverstripe-framework/issues/3092
 
