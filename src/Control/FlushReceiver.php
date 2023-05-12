@@ -20,7 +20,7 @@ class FlushReceiver extends Controller
 
     public static function my_url_segment(): string
     {
-        return '/admin/flush-front-end/';
+        return '/flush-front-end/';
     }
 
     public function Link($action = '')
