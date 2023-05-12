@@ -105,30 +105,6 @@ class FlushRecord extends DataObject implements Flushable
         }
     }
 
-    // Function to delete files and folders recursively
-    public function deleteFolderContents(string $folderPath)
-    {
-        if (!is_dir($folderPath)) {
-            return;
-        }
-
-        $files = array_diff(scandir($folderPath), array('.', '..'));
-
-        foreach ($files as $file) {
-            $filePath = $folderPath . '/' . $file;
-
-            if (is_dir($filePath)) {
-                $this->deleteFolderContents((string) $filePath); // Recursively delete sub-folders
-            } else {
-                try {
-                    unlink($filePath); // Delete files
-                } catch (Exception $e) {
-
-                }
-            }
-        }
-    }
-
     public static function run_flush($url)
     {
     }
