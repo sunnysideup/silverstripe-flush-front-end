@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\FlushFrontEnd\Control;
 
+use Exception;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Middleware\HTTPCacheControlMiddleware;
@@ -49,6 +50,10 @@ class FlushReceiver extends Controller
             die('This needs to be run from the front-end.');
         }
 
+        if(file_exists(TEMP_PATH)) {
+            $this->deleteFolderContents(TEMP_PATH);
+        }
+
         HTTPCacheControlMiddleware::singleton()->disableCache(true);
         ClassLoader::inst()->getManifest()->regenerate(false);
         // Reset all resettables
@@ -74,5 +79,29 @@ class FlushReceiver extends Controller
         echo 'object not found';
 
         return null;
+    }
+
+    // Function to delete files and folders recursively
+    private function deleteFolderContents(string $folderPath)
+    {
+        if (!is_dir($folderPath)) {
+            return;
+        }
+
+        $files = array_diff(scandir($folderPath), array('.', '..'));
+
+        foreach ($files as $file) {
+            $filePath = $folderPath . '/' . $file;
+
+            if (is_dir($filePath)) {
+                $this->deleteFolderContents((string) $filePath); // Recursively delete sub-folders
+            } else {
+                try {
+                    unlink($filePath); // Delete files
+                } catch (Exception $e) {
+
+                }
+            }
+        }
     }
 }

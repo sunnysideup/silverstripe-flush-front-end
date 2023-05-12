@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\FlushFrontEnd\Model;
 
+use Exception;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Flushable;
@@ -73,6 +74,7 @@ class FlushRecord extends DataObject implements Flushable
         if (Security::database_is_ready() && Director::is_cli() && false === self::$done) {
             self::$done = true;
             register_shutdown_function(function () {
+
                 $obj = \Sunnysideup\FlushFrontEnd\Model\FlushRecord::create();
                 $obj->write();
                 sleep(2);
@@ -100,6 +102,30 @@ class FlushRecord extends DataObject implements Flushable
                 $obj->write();
                 echo $data;
             });
+        }
+    }
+
+    // Function to delete files and folders recursively
+    public function deleteFolderContents(string $folderPath)
+    {
+        if (!is_dir($folderPath)) {
+            return;
+        }
+
+        $files = array_diff(scandir($folderPath), array('.', '..'));
+
+        foreach ($files as $file) {
+            $filePath = $folderPath . '/' . $file;
+
+            if (is_dir($filePath)) {
+                $this->deleteFolderContents((string) $filePath); // Recursively delete sub-folders
+            } else {
+                try {
+                    unlink($filePath); // Delete files
+                } catch (Exception $e) {
+
+                }
+            }
         }
     }
 
