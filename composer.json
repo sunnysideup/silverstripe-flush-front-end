@@ -22,7 +22,7 @@
         }
     ],
     "require": {
-        "silverstripe/recipe-core": "~4.4"
+        "silverstripe/recipe-core": "^4.4"
     },
     "autoload": {
         "psr-4": {
