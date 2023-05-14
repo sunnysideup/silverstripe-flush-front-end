@@ -50,7 +50,7 @@ class FlushReceiver extends Controller
             die('This needs to be run from the front-end.');
         }
 
-        if(file_exists(TEMP_PATH)) {
+        if (file_exists(TEMP_PATH)) {
             $this->deleteFolderContents(TEMP_PATH);
         }
 
@@ -84,11 +84,11 @@ class FlushReceiver extends Controller
     // Function to delete files and folders recursively
     private function deleteFolderContents(string $folderPath)
     {
-        if (!is_dir($folderPath)) {
+        if (! is_dir($folderPath)) {
             return;
         }
 
-        $files = array_diff(scandir($folderPath), array('.', '..'));
+        $files = array_diff(scandir($folderPath), ['.', '..']);
 
         foreach ($files as $file) {
             $filePath = $folderPath . '/' . $file;
@@ -99,7 +99,6 @@ class FlushReceiver extends Controller
                 try {
                     unlink($filePath); // Delete files
                 } catch (Exception $e) {
-
                 }
             }
         }

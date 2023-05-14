@@ -2,7 +2,6 @@
 
 namespace Sunnysideup\FlushFrontEnd\Model;
 
-use Exception;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Flushable;
@@ -74,7 +73,6 @@ class FlushRecord extends DataObject implements Flushable
         if (Security::database_is_ready() && Director::is_cli() && false === self::$done) {
             self::$done = true;
             register_shutdown_function(function () {
-
                 $obj = \Sunnysideup\FlushFrontEnd\Model\FlushRecord::create();
                 $obj->write();
                 sleep(2);
