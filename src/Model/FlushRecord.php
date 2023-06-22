@@ -31,7 +31,7 @@ class FlushRecord extends DataObject implements Flushable
     ];
 
     private static $indexes = [
-        'Created' => true,
+        'ID' => true,
         'Done' => true,
         'Code' => true,
     ];
