@@ -1,32 +1,32 @@
 {
-    "name": "sunnysideup/flush-front-end",
-    "type": "silverstripe-vendormodule",
-    "description": "Clear the front-end from CLI",
-    "keywords": [
-        "Silverstripe-CMS",
-        "CMS",
-        "Silverstripe",
-        "flush",
-        "front-end",
-        "clear cache",
-        "caching",
-        "cache",
-        "cli"
-    ],
-    "license": "BSD-3-Clause",
-    "authors": [
-        {
-            "name": "Nicolaas Francken",
-            "email": "modules@sunnysideup.co.nz",
-            "role": "lead developer"
-        }
-    ],
-    "require": {
-        "silverstripe/recipe-core": "^4.0 || ^5.0"
-    },
-    "autoload": {
-        "psr-4": {
-            "Sunnysideup\\FlushFrontEnd\\": "src/"
-        }
+  "name": "sunnysideup/flush-front-end",
+  "type": "silverstripe-vendormodule",
+  "description": "Clear the front-end from CLI",
+  "keywords": [
+    "Silverstripe-CMS",
+    "CMS",
+    "Silverstripe",
+    "flush",
+    "front-end",
+    "clear cache",
+    "caching",
+    "cache",
+    "cli"
+  ],
+  "license": "BSD-3-Clause",
+  "authors": [
+    {
+      "name": "Nicolaas Francken",
+      "email": "modules@sunnysideup.co.nz",
+      "role": "lead developer"
     }
+  ],
+  "require": {
+    "silverstripe/recipe-core": "^4.0 || ^5.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Sunnysideup\\FlushFrontEnd\\": "src/"
+    }
+  }
 }
