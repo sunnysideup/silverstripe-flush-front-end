@@ -6,4 +6,4 @@ Before:
 ---
 SilverStripe\Control\Director:
   rules:
-    'timeline-full-list//$Action/$ID/$OtherID/$Version': 'Sunnysideup\FlushFrontEnd\Control\FlushReceiver'
+    'flush-front-end//$Action/$ID/$OtherID/$Version': 'Sunnysideup\FlushFrontEnd\Control\FlushReceiver'
