@@ -18,6 +18,8 @@ class FlushReceiver extends Controller
 {
     private static $allowed_actions = [
         'do' => true,
+        'completed' => true,
+        'available' => true,
     ];
 
     public static function my_url_segment(): string
@@ -76,10 +78,19 @@ class FlushReceiver extends Controller
             $obj->write();
 
             $this->doFlush();
-            echo 'FRONT-END FLUSHED';
-        } else {
-            echo '<br />ERROR';
+            $olds = FlushRecord::get()->filter(['Created:LessThan' => date('Y-m-d h:i:s', strtotime('-3 months'))]);
+            foreach($olds as $old) {
+                $old->delete();
+            }
+
+            return '
+-----------------------------------------
+SUCCESS: FRONT-END FLUSHED
+-----------------------------------------
+
+';
         }
+        return '<br />ERROR';
     }
 
     protected function doFlush()
