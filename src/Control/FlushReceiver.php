@@ -33,11 +33,11 @@ class FlushReceiver extends Controller
         $code = $request->param('ID');
         $obj = $this->getFlushRecord($code);
         if ($obj) {
-            $this->doFlush();
-
-            //run flush!
+            // mark as done first
             $obj->Done = true;
             $obj->write();
+            
+            $this->doFlush();
             echo 'FRONT-END FLUSHED';
         } else {
             echo '<br />ERROR';
