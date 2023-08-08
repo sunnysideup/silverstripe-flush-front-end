@@ -20,12 +20,12 @@ class FlushReceiver extends Controller
 
     public static function my_url_segment(): string
     {
-        return '/flush-front-end/';
+        return 'flush-front-end';
     }
 
     public function Link($action = '')
     {
-        return self::join_links(self::my_url_segment(), $action);
+        return '/'.self::join_links(self::my_url_segment(), $action);
     }
 
     public function do($request)
