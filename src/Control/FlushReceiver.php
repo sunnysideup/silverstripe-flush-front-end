@@ -10,6 +10,8 @@ use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Flushable;
 use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Core\Resettable;
+use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\Security\Permission;
 use Sunnysideup\FlushFrontEnd\Model\FlushRecord;
 
 class FlushReceiver extends Controller
@@ -28,15 +30,51 @@ class FlushReceiver extends Controller
         return '/'.self::join_links(self::my_url_segment(), $action);
     }
 
+    public function completed()
+    {
+        if (Director::is_cli() || Permission::check('ADMIN')) {
+            $objects = FlushRecord::get()->filter(['Done' => false]);
+            foreach($objects as $obj) {
+                echo DBField::create_field('DateTime', $obj->LastEdited)->ago().' - '.$obj->Code;
+                if(! Director::is_cli()) {
+                    echo PHP_EOL;
+                } else {
+                    echo '<br />';
+                }
+            }
+        } else {
+            die('This needs to be run from the command line or you need to be logged in as ADMIN.');
+        }
+    }
+
+    public function available()
+    {
+        if (Director::is_cli() || Permission::check('ADMIN')) {
+            $objects = FlushRecord::get()->filter(['Done' => false]);
+            foreach($objects as $obj) {
+                if(Director::is_cli()) {
+                    echo $this->Link('do/'.$obj->Code).PHP_EOL;
+                } else {
+                    echo '<a href="'.$this->Link('do/'.$obj->Code).'">'.$obj->Code.'</a><br />';
+                }
+            }
+        } else {
+            die('This needs to be run from the command line or you need to be logged in as ADMIN.');
+        }
+    }
+
     public function do($request)
     {
+        if (Director::is_cli()) {
+            die('This needs to be run from the front-end.');
+        }
         $code = $request->param('ID');
         $obj = $this->getFlushRecord($code);
         if ($obj) {
             // mark as done first
             $obj->Done = true;
             $obj->write();
-            
+
             $this->doFlush();
             echo 'FRONT-END FLUSHED';
         } else {
@@ -46,10 +84,6 @@ class FlushReceiver extends Controller
 
     protected function doFlush()
     {
-        if (Director::is_cli()) {
-            die('This needs to be run from the front-end.');
-        }
-
         if (file_exists(TEMP_PATH)) {
             $this->deleteFolderContents(TEMP_PATH);
         }
