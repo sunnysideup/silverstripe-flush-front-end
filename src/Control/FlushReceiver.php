@@ -37,7 +37,7 @@ class FlushReceiver extends Controller
         if (Director::is_cli() || Permission::check('ADMIN')) {
             $objects = FlushRecord::get()->filter(['Done' => false]);
             foreach($objects as $obj) {
-                echo DBField::create_field('DateTime', $obj->LastEdited)->ago().' - '.$obj->Code;
+                echo $obj->dbObject('LastEdited')->ago().' - '.$obj->Code;
                 if(! Director::is_cli()) {
                     echo PHP_EOL;
                 } else {
@@ -68,7 +68,12 @@ class FlushReceiver extends Controller
     public function do($request)
     {
         if (Director::is_cli()) {
-            die('This needs to be run from the front-end.');
+            die(
+                '
+This needs to be run from the front-end.
+
+'
+            );
         }
         $code = $request->param('ID');
         $obj = $this->getFlushRecord($code);
@@ -90,7 +95,12 @@ SUCCESS: FRONT-END FLUSHED
 
 ';
         }
-        return '<br />ERROR';
+        return '
+-----------------------------------------
+ERROR: FRONT-END NOT FLUSHED
+-----------------------------------------
+
+        ';
     }
 
     protected function doFlush()

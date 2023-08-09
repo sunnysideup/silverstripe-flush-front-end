@@ -14,4 +14,4 @@ https://github.com/silverstripe/silverstripe-framework/issues/3092
 
 ## how to use it
 
-run `sake dev/build` from the command line and the front-end will be flushed.
+run `sake dev flush=all` from the command line and the front-end will be flushed.
