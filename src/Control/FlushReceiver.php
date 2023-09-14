@@ -10,7 +10,6 @@ use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Flushable;
 use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Core\Resettable;
-use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Security\Permission;
 use Sunnysideup\FlushFrontEnd\Model\FlushRecord;
 
@@ -29,16 +28,16 @@ class FlushReceiver extends Controller
 
     public function Link($action = '')
     {
-        return '/'.self::join_links(self::my_url_segment(), $action);
+        return '/' . self::join_links(self::my_url_segment(), $action);
     }
 
     public function completed()
     {
         if (Director::is_cli() || Permission::check('ADMIN')) {
             $objects = FlushRecord::get()->filter(['Done' => false]);
-            foreach($objects as $obj) {
-                echo $obj->dbObject('LastEdited')->ago().' - '.$obj->Code;
-                if(! Director::is_cli()) {
+            foreach ($objects as $obj) {
+                echo $obj->dbObject('LastEdited')->ago() . ' - ' . $obj->Code;
+                if (! Director::is_cli()) {
                     echo PHP_EOL;
                 } else {
                     echo '<br />';
@@ -53,11 +52,11 @@ class FlushReceiver extends Controller
     {
         if (Director::is_cli() || Permission::check('ADMIN')) {
             $objects = FlushRecord::get()->filter(['Done' => false]);
-            foreach($objects as $obj) {
-                if(Director::is_cli()) {
-                    echo $this->Link('do/'.$obj->Code).PHP_EOL;
+            foreach ($objects as $obj) {
+                if (Director::is_cli()) {
+                    echo $this->Link('do/' . $obj->Code) . PHP_EOL;
                 } else {
-                    echo '<a href="'.$this->Link('do/'.$obj->Code).'">'.$obj->Code.'</a><br />';
+                    echo '<a href="' . $this->Link('do/' . $obj->Code) . '">' . $obj->Code . '</a><br />';
                 }
             }
         } else {
@@ -84,7 +83,7 @@ This needs to be run from the front-end.
 
             $this->doFlush();
             $olds = FlushRecord::get()->filter(['Created:LessThan' => date('Y-m-d h:i:s', strtotime('-3 months'))]);
-            foreach($olds as $old) {
+            foreach ($olds as $old) {
                 $old->delete();
             }
 
@@ -95,6 +94,7 @@ SUCCESS: FRONT-END FLUSHED
 
 ';
         }
+
         return '
 -----------------------------------------
 ERROR: FRONT-END NOT FLUSHED
