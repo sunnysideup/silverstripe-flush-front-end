@@ -7,6 +7,7 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Middleware\HTTPCacheControlMiddleware;
 use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Convert;
 use SilverStripe\Core\Flushable;
 use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Core\Resettable;
@@ -16,6 +17,7 @@ use Sunnysideup\FlushFrontEnd\Model\FlushRecord;
 class FlushReceiver extends Controller
 {
     private static $allowed_actions = [
+        'index' => 'ADMIN',
         'do' => true,
         'completed' => true,
         'available' => true,
@@ -74,27 +76,28 @@ This needs to be run from the front-end.
 '
             );
         }
-        $code = $request->param('ID');
-        $obj = $this->getFlushRecord($code);
-        if ($obj) {
-            // mark as done first
-            $obj->Done = true;
-            $obj->write();
+        $code = Convert::raw2sql($request->param('ID'));
+        if($code) {
+            $obj = $this->getFlushRecord($code);
+            if ($obj) {
+                // mark as done first
+                $obj->Done = true;
+                $obj->write();
 
-            $this->doFlush();
-            $olds = FlushRecord::get()->filter(['Created:LessThan' => date('Y-m-d h:i:s', strtotime('-3 months'))]);
-            foreach ($olds as $old) {
-                $old->delete();
-            }
+                $this->doFlush();
+                $olds = FlushRecord::get()->filter(['Created:LessThan' => date('Y-m-d h:i:s', strtotime('-3 months'))]);
+                foreach ($olds as $old) {
+                    $old->delete();
+                }
 
-            return '
+                return '
 -----------------------------------------
 SUCCESS: FRONT-END FLUSHED
 -----------------------------------------
 
 ';
+            }
         }
-
         return '
 -----------------------------------------
 ERROR: FRONT-END NOT FLUSHED
