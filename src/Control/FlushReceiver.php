@@ -77,9 +77,9 @@ This needs to be run from the front-end.
             );
         }
         $code = Convert::raw2sql($request->param('ID'));
-        if($code) {
+        if ($code) {
             $obj = $this->getFlushRecord($code);
-            if ($obj) {
+            if ($obj instanceof \Sunnysideup\FlushFrontEnd\Model\FlushRecord) {
                 // mark as done first
                 $obj->Done = true;
                 $obj->write();
@@ -152,7 +152,7 @@ ERROR: FRONT-END NOT FLUSHED
             $filePath = $folderPath . '/' . $file;
 
             if (is_dir($filePath)) {
-                $this->deleteFolderContents((string) $filePath); // Recursively delete sub-folders
+                $this->deleteFolderContents($filePath); // Recursively delete sub-folders
             } else {
                 try {
                     unlink($filePath); // Delete files
