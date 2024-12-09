@@ -12,6 +12,13 @@ use SilverStripe\ORM\DB;
 use SilverStripe\Security\Security;
 use Sunnysideup\FlushFrontEnd\Control\FlushReceiver;
 
+/**
+ * Class \Sunnysideup\FlushFrontEnd\Model\FlushRecord
+ *
+ * @property string $Code
+ * @property string $Response
+ * @property bool $Done
+ */
 class FlushRecord extends DataObject implements Flushable
 {
     protected static $done = false;

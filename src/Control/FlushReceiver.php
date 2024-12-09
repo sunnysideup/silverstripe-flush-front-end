@@ -14,6 +14,10 @@ use SilverStripe\Core\Resettable;
 use SilverStripe\Security\Permission;
 use Sunnysideup\FlushFrontEnd\Model\FlushRecord;
 
+/**
+ * Class \Sunnysideup\FlushFrontEnd\Control\FlushReceiver
+ *
+ */
 class FlushReceiver extends Controller
 {
     private static $allowed_actions = [
