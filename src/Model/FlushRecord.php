@@ -4,6 +4,7 @@ namespace Sunnysideup\FlushFrontEnd\Model;
 
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
+use SilverStripe\Core\Environment;
 use SilverStripe\Core\Flushable;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\ReadonlyField;
@@ -87,6 +88,13 @@ class FlushRecord extends DataObject implements Flushable
                 $url = Director::absoluteURL(
                     Controller::join_links(FlushReceiver::my_url_segment(), 'do', $code)
                 );
+                if (!Director::isLive()) {
+                    $user = Environment::getEnv('SS_BASIC_AUTH_USER');
+                    $pass = Environment::getEnv('SS_BASIC_AUTH_PASSWORD');
+                    if ($user && $pass) {
+                        $url = str_replace('://', '://' . $user . ':' . $pass . '@', $url);
+                    }
+                }
                 DB::alteration_message('Creating flush link: ' . $url);
                 // Create a new cURL resource
                 $ch = curl_init();
@@ -110,9 +118,7 @@ class FlushRecord extends DataObject implements Flushable
         }
     }
 
-    public static function run_flush($url)
-    {
-    }
+    public static function run_flush($url) {}
 
     protected function onBeforeWrite()
     {
