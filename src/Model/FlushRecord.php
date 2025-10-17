@@ -16,9 +16,16 @@ use Sunnysideup\FlushFrontEnd\Control\FlushReceiver;
 /**
  * Class \Sunnysideup\FlushFrontEnd\Model\FlushRecord
  *
- * @property string $Code
- * @property string $Response
+ * @property ?string $Code
+ * @property ?string $Response
  * @property bool $Done
+ * @mixin FileLinkTracking
+ * @mixin AssetControlExtension
+ * @mixin SiteTreeLinkTracking
+ * @mixin VersionedStateExtension
+ * @mixin RecursivePublishable
+ * @mixin DataObjectExtension
+ * @mixin FixBooleanSearchAsExtension
  */
 class FlushRecord extends DataObject implements Flushable
 {
