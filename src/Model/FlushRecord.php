@@ -85,7 +85,7 @@ class FlushRecord extends DataObject implements Flushable
 
     public static function flush()
     {
-        if (Security::database_is_ready() && Director::is_cli() && false === self::$done) {
+        if (Security::database_is_ready() && Director::is_cli() && false === self::$done && Environment::getEnv('SS_RELEASE_FRONT_END') != false) {
             self::$done = true;
             register_shutdown_function(function () {
                 $obj = \Sunnysideup\FlushFrontEnd\Model\FlushRecord::create();
