@@ -22,8 +22,8 @@ use Sunnysideup\FlushFrontEnd\Control\FlushReceiver;
  * @mixin FileLinkTracking
  * @mixin AssetControlExtension
  * @mixin SiteTreeLinkTracking
- * @mixin VersionedStateExtension
  * @mixin RecursivePublishable
+ * @mixin VersionedStateExtension
  * @mixin DataObjectExtension
  * @mixin FixBooleanSearchAsExtension
  */
