@@ -16,7 +16,6 @@ use Sunnysideup\FlushFrontEnd\Model\FlushRecord;
 
 /**
  * Class \Sunnysideup\FlushFrontEnd\Control\FlushReceiver
- *
  */
 class FlushReceiver extends Controller
 {
