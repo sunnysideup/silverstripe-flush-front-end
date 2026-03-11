@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\FlushFrontEnd\Control;
 
+use Override;
 use Exception;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
@@ -31,6 +32,7 @@ class FlushReceiver extends Controller
         return 'flush-front-end';
     }
 
+    #[Override]
     public function Link($action = '')
     {
         return '/' . self::join_links(self::my_url_segment(), $action);
@@ -79,10 +81,11 @@ This needs to be run from the front-end.
 '
             );
         }
+
         $code = Convert::raw2sql($request->param('ID'));
         if ($code) {
             $obj = $this->getFlushRecord($code);
-            if ($obj instanceof \Sunnysideup\FlushFrontEnd\Model\FlushRecord) {
+            if ($obj instanceof FlushRecord) {
                 // mark as done first
                 $obj->Done = true;
                 $obj->write();
@@ -101,6 +104,7 @@ SUCCESS: FRONT-END FLUSHED
 ';
             }
         }
+
         return '
 -----------------------------------------
 ERROR: FRONT-END NOT FLUSHED
@@ -159,7 +163,7 @@ ERROR: FRONT-END NOT FLUSHED
             } else {
                 try {
                     unlink($filePath); // Delete files
-                } catch (Exception $e) {
+                } catch (Exception) {
                 }
             }
         }
