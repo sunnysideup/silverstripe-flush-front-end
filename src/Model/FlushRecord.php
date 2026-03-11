@@ -60,11 +60,6 @@ class FlushRecord extends DataObject implements Flushable
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
-        /** @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldsToTab: Changed type of parameter $fields in FieldList::addFieldsToTab() from dynamic to array
-         * @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldsToTab: Changed type of parameter $insertBefore in FieldList::addFieldsToTab() from dynamic to string|null
-         * @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldsToTab: Changed type of parameter $tabName in FieldList::addFieldsToTab() from dynamic to string
-         * @TODO SSU RECTOR UPGRADE TASK - FieldList::addFieldsToTab: Changed return type for method FieldList::addFieldsToTab() from dynamic to FieldList
-         */
         $fields->addFieldsToTab(
             'Root.Main',
             [
