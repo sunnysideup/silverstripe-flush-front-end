@@ -2,6 +2,7 @@
 
 namespace Sunnysideup\FlushFrontEnd\Model;
 
+use Override;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Environment;
@@ -55,6 +56,7 @@ class FlushRecord extends DataObject implements Flushable
         'ID' => 'DESC',
     ];
 
+    #[Override]
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
@@ -88,7 +90,7 @@ class FlushRecord extends DataObject implements Flushable
         if (Security::database_is_ready() && Director::is_cli() && false === self::$done) {
             self::$done = true;
             register_shutdown_function(function () {
-                $obj = \Sunnysideup\FlushFrontEnd\Model\FlushRecord::create();
+                $obj = FlushRecord::create();
                 $obj->write();
                 sleep(2);
                 $code = $obj->Code;
@@ -102,6 +104,7 @@ class FlushRecord extends DataObject implements Flushable
                         $url = str_replace('://', '://' . $user . ':' . $pass . '@', $url);
                     }
                 }
+
                 DB::alteration_message('Creating flush link: ' . $url);
                 // Create a new cURL resource
                 $ch = curl_init();
@@ -127,6 +130,7 @@ class FlushRecord extends DataObject implements Flushable
 
     public static function run_flush($url) {}
 
+    #[Override]
     protected function onBeforeWrite()
     {
         parent::onBeforeWrite();
