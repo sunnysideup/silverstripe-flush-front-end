@@ -36,7 +36,7 @@ class FlushRecord extends DataObject implements Flushable
 
     private static $db = [
         'Code' => 'Varchar',
-        'Response' => 'Varchar',
+        'Response' => 'Text',
         'Done' => 'Boolean',
     ];
 
