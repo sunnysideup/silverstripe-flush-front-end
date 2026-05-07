@@ -98,7 +98,7 @@ class FlushRecord extends DataObject implements Flushable
                     Controller::join_links(FlushReceiver::my_url_segment(), 'do', $code)
                 );
                 if (! Director::isLive()) {
-                    $user = Environment::getEnv('SS_BASIC_AUTH_USER');
+                    $user = Environment::getEnv('SS_BASIC_AUTH_USER') ?: Environment::getEnv('SS_DEFAULT_ADMIN_USERNAME');
                     $pass = Environment::getEnv('SS_BASIC_AUTH_PASSWORD');
                     if ($user && $pass) {
                         $url = str_replace('://', '://' . $user . ':' . $pass . '@', $url);
