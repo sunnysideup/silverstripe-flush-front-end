@@ -19,13 +19,13 @@ use Sunnysideup\FlushFrontEnd\Control\FlushReceiver;
  * @property ?string $Code
  * @property ?string $Response
  * @property bool $Done
- * @mixin FileLinkTracking
  * @mixin AssetControlExtension
- * @mixin SiteTreeLinkTracking
- * @mixin RecursivePublishable
- * @mixin VersionedStateExtension
  * @mixin DataObjectExtension
+ * @mixin FileLinkTracking
  * @mixin FixBooleanSearchAsExtension
+ * @mixin RecursivePublishable
+ * @mixin SiteTreeLinkTracking
+ * @mixin VersionedStateExtension
  */
 class FlushRecord extends DataObject implements Flushable
 {
