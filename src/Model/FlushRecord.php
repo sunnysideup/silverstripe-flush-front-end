@@ -110,7 +110,9 @@ class FlushRecord extends DataObject implements Flushable
                 curl_setopt($ch, CURLOPT_URL, $url);
 
                 // Do not check the SSL certificates
-                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                if (Director::isDev()) {
+                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                }
 
                 // Return the actual result of the curl result instead of success code
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
