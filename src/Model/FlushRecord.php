@@ -111,6 +111,7 @@ class FlushRecord extends DataObject implements Flushable
 
                 // Do not check the SSL certificates
                 if (Director::isDev()) {
+                    // nosemgrep: SSLVerifyFalse
                     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
                 }
 
