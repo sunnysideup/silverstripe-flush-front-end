@@ -11,6 +11,7 @@ use SilverStripe\Core\Convert;
 use SilverStripe\Core\Flushable;
 use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Core\Resettable;
+use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\Security\Permission;
 use Sunnysideup\FlushFrontEnd\Model\FlushRecord;
 
@@ -27,6 +28,11 @@ class FlushReceiver extends Controller
         'available' => true,
     ];
 
+    /**
+     * a flush code can only be used for this long (in seconds) after it has been created.
+     */
+    private static $code_lifetime_in_seconds = 3600;
+
     public static function my_url_segment(): string
     {
         return 'flush-front-end';
@@ -40,7 +46,7 @@ class FlushReceiver extends Controller
     public function completed()
     {
         if (Director::is_cli() || Permission::check('ADMIN')) {
-            $objects = FlushRecord::get()->filter(['Done' => false]);
+            $objects = $this->getUsableFlushRecords();
             foreach ($objects as $obj) {
                 echo $obj->dbObject('LastEdited')->ago() . ' - ' . $obj->Code;
                 if (! Director::is_cli()) {
@@ -57,7 +63,7 @@ class FlushReceiver extends Controller
     public function available()
     {
         if (Director::is_cli() || Permission::check('ADMIN')) {
-            $objects = FlushRecord::get()->filter(['Done' => false]);
+            $objects = $this->getUsableFlushRecords();
             foreach ($objects as $obj) {
                 if (Director::is_cli()) {
                     echo $this->Link('do/' . $obj->Code) . PHP_EOL;
@@ -80,7 +86,7 @@ This needs to be run from the front-end.
 '
             );
         }
-        $code = Convert::raw2sql($request->param('ID'));
+        $code = (string) $request->param('ID');
         if ($code) {
             $obj = $this->getFlushRecord($code);
             if ($obj instanceof \Sunnysideup\FlushFrontEnd\Model\FlushRecord) {
@@ -89,7 +95,7 @@ This needs to be run from the front-end.
                 $obj->write();
 
                 $this->doFlush();
-                $olds = FlushRecord::get()->filter(['Created:LessThan' => date('Y-m-d h:i:s', strtotime('-3 months'))]);
+                $olds = FlushRecord::get()->filter(['Created:LessThan' => date('Y-m-d H:i:s', strtotime('-3 months'))]);
                 foreach ($olds as $old) {
                     $old->delete();
                 }
@@ -130,11 +136,22 @@ ERROR: FRONT-END NOT FLUSHED
         }
     }
 
+    protected function getUsableFlushRecords()
+    {
+        $lifetime = max(60, (int) $this->config()->get('code_lifetime_in_seconds'));
+
+        return FlushRecord::get()->filter([
+            'Done' => false,
+            'Created:GreaterThan' => date('Y-m-d H:i:s', DBDatetime::now()->getTimestamp() - $lifetime),
+        ]);
+    }
+
     protected function getFlushRecord(string $code): ?FlushRecord
     {
         /** @var FlushRecord $obj */
-        $obj = FlushRecord::get()->filter(['Done' => false, 'Code' => $code])->first();
-        if ($obj) {
+        // codes expire: only recent ones that have not been used yet
+        $obj = $this->getUsableFlushRecords()->filter(['Code' => $code])->first();
+        if ($obj && hash_equals((string) $obj->Code, $code)) {
             return $obj;
         }
 

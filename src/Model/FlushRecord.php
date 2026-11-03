@@ -95,16 +95,24 @@ class FlushRecord extends DataObject implements Flushable
                 $url = Director::absoluteURL(
                     Controller::join_links(FlushReceiver::my_url_segment(), 'do', $code)
                 );
+                // the credentials are sent as an Authorization header, never as part of the url (that gets printed / logged).
+                $userPwd = '';
                 if (! Director::isLive()) {
                     $user = Environment::getEnv('SS_BASIC_AUTH_USER');
                     $pass = Environment::getEnv('SS_BASIC_AUTH_PASSWORD');
                     if ($user && $pass) {
-                        $url = str_replace('://', '://' . $user . ':' . $pass . '@', $url);
+                        $userPwd = $user . ':' . $pass;
                     }
                 }
                 DB::alteration_message('Creating flush link: ' . $url);
                 // Create a new cURL resource
                 $ch = curl_init();
+                if ($userPwd !== '') {
+                    curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+                    curl_setopt($ch, CURLOPT_USERPWD, $userPwd);
+                }
+                curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
+                curl_setopt($ch, CURLOPT_TIMEOUT, 300);
 
                 // Set the file URL to fetch through cURL
                 curl_setopt($ch, CURLOPT_URL, $url);
